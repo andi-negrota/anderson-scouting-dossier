@@ -1,0 +1,14 @@
+# Sin este archivo, Streamlit usa su tema claro y pinta los componentes nativos
+# (encabezados, captions, widgets) en #31333F sobre el fondo #0A0E1A: contraste 1,54:1,
+# es decir, prácticamente invisibles. El CSS propio no llegaba a esos elementos.
+
+[theme]
+base = "dark"
+primaryColor = "#6CABDD"
+backgroundColor = "#0A0E1A"
+secondaryBackgroundColor = "#131A2C"
+textColor = "#E8EDF5"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false

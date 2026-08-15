@@ -1,0 +1,24 @@
+# Parse SDK -- generated payload is per-key (reveals your API inventory).
+# Ignore everything under the generated package; keep only the committed scaffold.
+parse_apis/src/parse_apis/*
+!parse_apis/src/parse_apis/__init__.py
+!parse_apis/src/parse_apis/py.typed
+.parse/
+
+# Entorno y artefactos de Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Credenciales locales de Streamlit
+.streamlit/secrets.toml
+
+# Configuración de herramientas de desarrollo (agente, skills, MCP), ajena al
+# proyecto en sí. No aporta nada a quien clona el repo y .mcp.json además tiene
+# una ruta absoluta de esta máquina.
+.agents/
+.claude/
+.mcp.json
+opencode.json
+skills-lock.json

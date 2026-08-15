@@ -1,0 +1,51 @@
+[project]
+name = "laliga-analytics"
+version = "0.1.0"
+description = "Informe de scouting de Elliot Anderson (Nottingham Forest -> Manchester City) con datos de FPL, ESPN y FotMob"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "parse-apis",
+    "streamlit>=1.40",
+    "plotly>=5.24",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "requests>=2.31",
+    "parse-sdk",
+]
+
+[tool.uv.sources]
+parse-apis = { path = "parse_apis", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: levanta la app entera y llama a las APIs reales",
+]
+
+# Managed by the parse CLI (`parse add` / `parse remove` / `parse sync`).
+# Edit `apis` to curate which of your account APIs this repo syncs;
+# an absent `apis` key means all of them.
+
+# Managed by the parse CLI (`parse add` / `parse remove` / `parse sync`).
+# Edit `apis` to curate which of your account APIs this repo syncs;
+# an absent `apis` key means all of them.
+
+# Managed by the parse CLI (`parse add` / `parse remove` / `parse sync`).
+# Edit `apis` to curate which of your account APIs this repo syncs;
+# an absent `apis` key means all of them.
+[tool.parse]
+
+[[tool.parse.marketplace]]
+scraper_id = "1ed7c95b-0348-41fb-baa1-f5f0096b7da5"
+slug = "espn_com_api"
+version = 5
+listing_id = "ab644963-f560-41a5-941e-29db2fc4fc61"
+source_url = "https://espn.com"
+
+[[tool.parse.marketplace]]
+scraper_id = "645b8e03-271d-4c85-97e7-35d5733a2d78"
+slug = "fotmob_com_api"
+version = 8
+listing_id = "d2378e4b-52ce-4f58-bd5d-d500dfc9da27"
+source_url = "https://fotmob.com"
