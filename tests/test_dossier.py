@@ -233,3 +233,13 @@ def test_app_renders_the_public_build_without_espn_or_fotmob(monkeypatch):
     assert "Hemeroteca" not in text
     assert "Campaña internacional" not in text
     assert "Del Forest al City en la tabla" not in text
+
+    # La metodología no debe citar fuentes que no aportaron nada visible. OJO: "ESPN"
+    # a secas sigue apareciendo en la portada como atribución del importe del
+    # traspaso (eso es correcto y no depende del SDK), así que se comprueban frases
+    # concretas de las tarjetas de metodología y del pie, no la palabra suelta.
+    assert "Ficha biométrica, splits de selección y noticias" not in text  # tarjeta ESPN
+    assert "no aporta datos individuales" not in text  # tarjeta FotMob
+    assert "Datos de Fantasy Premier League, ESPN y FotMob" not in text  # pie completo
+    assert "Sobre esta build" in text
+    assert "según ESPN" in text  # la cita del traspaso sí debe seguir

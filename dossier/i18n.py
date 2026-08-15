@@ -358,6 +358,26 @@ STRINGS: dict[str, dict[str, str]] = {
             "endpoint, so it contributes no individual data."
         ),
     },
+    # Solo aparece cuando ESPN/FotMob no están disponibles (la build pública): sin
+    # esto, la sección de metodología seguiría citando fuentes que no aportaron
+    # nada visible en esta build, que es justo lo que este proyecto evita.
+    "method_public_note_title": {"es": "Sobre esta build", "en": "About this build"},
+    "method_public_note": {
+        "es": (
+            "Esta build pública muestra sólo lo que sale de la API pública de Fantasy "
+            "Premier League. Las secciones de ESPN y FotMob usan un SDK privado por "
+            "cuenta que no viaja con el repositorio — no es un fallo de red, es que "
+            "esta build no las incluye. Funcionan en la versión local, junto con el "
+            "resto del código, en el repositorio."
+        ),
+        "en": (
+            "This public build shows only what comes from the public Fantasy Premier "
+            "League API. The ESPN and FotMob sections use a private, per-account SDK "
+            "that doesn't ship with the repository — it's not a network failure, this "
+            "build simply doesn't include them. They work in the local version, along "
+            "with the rest of the code, in the repository."
+        ),
+    },
     "method_limits_title": {"es": "Límites", "en": "Limits"},
     "method_limits": {
         "es": (
@@ -392,6 +412,12 @@ STRINGS: dict[str, dict[str, str]] = {
     "footer": {
         "es": "Python · Streamlit · Plotly. Datos de Fantasy Premier League, ESPN y FotMob.",
         "en": "Python · Streamlit · Plotly. Data from Fantasy Premier League, ESPN and FotMob.",
+    },
+    # Variante para cuando ESPN/FotMob no están en la build: el pie no puede decir
+    # que hay datos de fuentes que no aportaron nada visible en esta página.
+    "footer_fpl_only": {
+        "es": "Python · Streamlit · Plotly. Datos de Fantasy Premier League.",
+        "en": "Python · Streamlit · Plotly. Data from Fantasy Premier League.",
     },
     "footer_updated": {"es": "Datos leídos en vivo de cada API", "en": "Data read live from each API"},
 }

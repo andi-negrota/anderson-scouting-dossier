@@ -123,6 +123,12 @@ if ESPN_AVAILABLE:
     except espn.EspnUnavailable as exc:
         espn_error = str(exc)
 
+# No es lo mismo "el SDK está instalado" que "esta fuente aportó algo esta
+# ejecución": una cuota agotada o un corte de red con el SDK presente también deja
+# la fuente vacía, y en ese caso el aviso de arriba ya lo explica -- la metodología
+# y el pie no deben citarla como si hubiera aportado datos igualmente.
+espn_delivered = bool(bio or splits or news)
+
 
 # ── Raíl de identificación + idioma ──
 
@@ -429,6 +435,8 @@ if FOTMOB_AVAILABLE:
     except fotmob.FotmobUnavailable as exc:
         st.warning(t("error_fotmob", lang, detail=exc))
 
+fotmob_delivered = bool(table)
+
 forest_row = find_team(table, "Forest") if table else None
 city_row = find_team(table, "Man City", "Manchester City") if table else None
 if forest_row and city_row:
@@ -601,14 +609,33 @@ st.markdown(
     ui.form_head(t("form_no", lang, number="10"), t("method_title", lang)),
     unsafe_allow_html=True,
 )
-method_columns = st.columns(3)
-sources = [("FPL", "method_fpl"), ("ESPN", "method_espn"), ("FotMob", "method_fotmob")]
+# Sólo se listan las fuentes que de verdad aportaron algo a esta ejecución -- no
+# basta con que el SDK esté instalado. Si está instalado pero la fuente igualmente
+# no entregó nada (cuota agotada, red caída), el aviso de la sección correspondiente
+# ya lo explica arriba; aquí no hay que citarla como si hubiera aportado datos.
+sources = [("FPL", "method_fpl")]
+if espn_delivered:
+    sources.append(("ESPN", "method_espn"))
+if fotmob_delivered:
+    sources.append(("FotMob", "method_fotmob"))
+
+method_columns = st.columns(len(sources))
 for column, (label, key) in zip(method_columns, sources):
     with column:
         st.markdown(ui.method(label, t(key, lang, sample=sample)), unsafe_allow_html=True)
+
+# Esta nota es específica de "el SDK no viene instalado" (la build pública), no de
+# "el SDK está pero la llamada falló" -- ese segundo caso ya lo cuenta el aviso de
+# arriba con el motivo real, y decir aquí "no es un fallo de red" sería falso.
+if not (ESPN_AVAILABLE and FOTMOB_AVAILABLE):
+    st.markdown(
+        ui.notice(t("method_public_note_title", lang), t("method_public_note", lang)),
+        unsafe_allow_html=True,
+    )
 
 st.markdown(
     ui.notice(t("method_limits_title", lang), t("method_limits", lang)),
     unsafe_allow_html=True,
 )
-st.markdown(ui.footer(t("footer", lang), t("footer_updated", lang)), unsafe_allow_html=True)
+footer_key = "footer" if (espn_delivered and fotmob_delivered) else "footer_fpl_only"
+st.markdown(ui.footer(t(footer_key, lang), t("footer_updated", lang)), unsafe_allow_html=True)
