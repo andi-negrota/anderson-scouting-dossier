@@ -76,34 +76,39 @@ def peer_cloud_3d(
 
     xs = [p["x"] for p in cloud]
     ys = [p["y"] for p in cloud]
-    x_lo, x_mid, x_hi = _quartiles(xs)
-    y_lo, y_mid, y_hi = _quartiles(ys)
 
     figure = go.Figure()
 
     # ── Suelo: medianas y región intercuartílica ──
-    figure.add_trace(
-        go.Scatter3d(
-            x=[min(xs), max(xs)], y=[y_mid, y_mid], z=[0, 0],
-            mode="lines", line=dict(color=GRID, width=2),
-            hoverinfo="skip", showlegend=False,
+    # Sin centrocampistas en el grupo (p. ej. inicio de temporada, cuando nadie
+    # llega aún al umbral de minutos) no hay ejes de referencia que dibujar: el
+    # resto de la figura queda vacía en vez de reventar con min()/max() sobre listas
+    # vacías. `app.py` ya evita llamar aquí sin datos, pero el guard es barato.
+    if xs and ys:
+        x_lo, x_mid, x_hi = _quartiles(xs)
+        y_lo, y_mid, y_hi = _quartiles(ys)
+        figure.add_trace(
+            go.Scatter3d(
+                x=[min(xs), max(xs)], y=[y_mid, y_mid], z=[0, 0],
+                mode="lines", line=dict(color=GRID, width=2),
+                hoverinfo="skip", showlegend=False,
+            )
         )
-    )
-    figure.add_trace(
-        go.Scatter3d(
-            x=[x_mid, x_mid], y=[min(ys), max(ys)], z=[0, 0],
-            mode="lines", line=dict(color=GRID, width=2),
-            hoverinfo="skip", showlegend=False,
+        figure.add_trace(
+            go.Scatter3d(
+                x=[x_mid, x_mid], y=[min(ys), max(ys)], z=[0, 0],
+                mode="lines", line=dict(color=GRID, width=2),
+                hoverinfo="skip", showlegend=False,
+            )
         )
-    )
-    ellipse_x, ellipse_y = _ellipse(x_mid, y_mid, (x_hi - x_lo) / 2, (y_hi - y_lo) / 2)
-    figure.add_trace(
-        go.Scatter3d(
-            x=ellipse_x, y=ellipse_y, z=[0] * len(ellipse_x),
-            mode="lines", line=dict(color="rgba(233,239,230,0.30)", width=2),
-            name=middle_label, hoverinfo="skip",
+        ellipse_x, ellipse_y = _ellipse(x_mid, y_mid, (x_hi - x_lo) / 2, (y_hi - y_lo) / 2)
+        figure.add_trace(
+            go.Scatter3d(
+                x=ellipse_x, y=ellipse_y, z=[0] * len(ellipse_x),
+                mode="lines", line=dict(color="rgba(233,239,230,0.30)", width=2),
+                name=middle_label, hoverinfo="skip",
+            )
         )
-    )
 
     # ── La masa ──
     figure.add_trace(
