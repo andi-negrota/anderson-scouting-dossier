@@ -20,6 +20,12 @@ TIMEOUT = 20
 ANDERSON_FPL_ID = 481
 MIDFIELDER = 3
 
+# La temporada que provoco el fichaje a Manchester City. Es historia cerrada -- no
+# cambia -- asi que las cifras de cabecera se congelan en ella via `history_past`
+# en vez de leerse del registro en vivo, que en cuanto arranca la temporada
+# siguiente pasa a reflejar el club y los minutos del año en curso.
+TARGET_SEASON = "2025/26"
+
 # Umbral de minutos para entrar en el grupo de comparacion. Sin el, los percentiles
 # se inflan con suplentes que han jugado 40 minutos y tienen ratios por 90 absurdos.
 PEER_MIN_MINUTES = 900
@@ -226,6 +232,46 @@ def headline_stats(element: dict) -> dict:
         "ict_index": _to_float(element.get("ict_index")),
         "joined": element.get("team_join_date"),
         "birth_date": element.get("birth_date"),
+    }
+
+
+def past_season(summary: dict, season_name: str = TARGET_SEASON) -> dict | None:
+    """La fila congelada de `history_past` para esa temporada, o None si la API
+    nunca la registró para este jugador (p. ej. aún no ha jugado una completa)."""
+    for row in summary.get("history_past", []):
+        if row.get("season_name") == season_name:
+            return row
+    return None
+
+
+def headline_stats_for_season(season_row: dict) -> dict:
+    """Mismas cifras que `headline_stats`, pero leídas de una fila de
+    `history_past` -- minutos, goles, xG... quedan fijos en esa temporada en vez
+    de arrastrar el club y los totales de la que esté en curso.
+
+    `history_past` no publica precio en vivo, % de selección ni
+    `points_per_game` -- son cifras del mercado actual, no de una temporada
+    cerrada -- así que no aparecen aquí en vez de estimarlas.
+    """
+    minutes = _to_float(season_row.get("minutes"))
+    goals = int(season_row.get("goals_scored") or 0)
+    assists = int(season_row.get("assists") or 0)
+    return {
+        "minutes": int(minutes),
+        "starts": int(season_row.get("starts") or 0),
+        "goals": goals,
+        "assists": assists,
+        "goal_involvements": goals + assists,
+        "xg": _to_float(season_row.get("expected_goals")),
+        "xa": _to_float(season_row.get("expected_assists")),
+        "xgi": _to_float(season_row.get("expected_goal_involvements")),
+        "tackles": int(season_row.get("tackles") or 0),
+        "recoveries": int(season_row.get("recoveries") or 0),
+        "cbi": int(season_row.get("clearances_blocks_interceptions") or 0),
+        "yellow_cards": int(season_row.get("yellow_cards") or 0),
+        "red_cards": int(season_row.get("red_cards") or 0),
+        "bonus": int(season_row.get("bonus") or 0),
+        "total_points": int(season_row.get("total_points") or 0),
     }
 
 

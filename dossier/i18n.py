@@ -157,7 +157,16 @@ STRINGS: dict[str, dict[str, str]] = {
     "kpi_tackles": {"es": "Entradas", "en": "Tackles"},
     "kpi_tackles_sub": {"es": "{cbi} despejes/bloqueos/int.", "en": "{cbi} clearances/blocks/int."},
     "kpi_points": {"es": "Puntos FPL", "en": "FPL points"},
-    "kpi_points_sub": {"es": "{ppg} por partido", "en": "{ppg} per game"},
+    "kpi_points_sub": {"es": "{bonus} de bonificación", "en": "{bonus} bonus points"},
+    "kpi_season_missing": {
+        "es": (
+            "La API no tiene registrada una temporada {season} completa para "
+            "este jugador."
+        ),
+        "en": (
+            "The API has no complete {season} season on record for this player."
+        ),
+    },
 
     # ── Percentiles ──
     "pct_eyebrow": {"es": "Perfil comparado", "en": "Comparative profile"},
