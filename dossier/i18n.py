@@ -64,6 +64,16 @@ STRINGS: dict[str, dict[str, str]] = {
     },
     "cloud_peers": {"es": "Centrocampistas de la Premier", "en": "Premier League midfielders"},
     "cloud_middle": {"es": "50% central del grupo", "en": "Middle 50% of the group"},
+    "cloud_empty": {
+        "es": (
+            "Todavía no hay centrocampistas con minutos suficientes esta temporada "
+            "para formar el grupo de comparación. Vuelve cuando avancen más jornadas."
+        ),
+        "en": (
+            "No midfielders have played enough minutes yet this season to form the "
+            "comparison group. Check back once more matchweeks have passed."
+        ),
+    },
     "cloud_reading": {
         "es": "Lectura exacta",
         "en": "Exact values",

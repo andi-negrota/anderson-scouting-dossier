@@ -284,18 +284,21 @@ st.markdown(
 axis_keys = ("recoveries90", "xa90", "xg90")
 axis_labels = tuple(t(f"metric_{key}", lang) for key in axis_keys)
 
-st.plotly_chart(
-    charts.peer_cloud_3d(
-        cloud=cloud,
-        subject_id=fpl.ANDERSON_FPL_ID,
-        subject_label="Anderson",
-        axis_labels=axis_labels,
-        peers_label=t("cloud_peers", lang),
-        middle_label=t("cloud_middle", lang),
-    ),
-    use_container_width=True,
-    config={"displayModeBar": False},
-)
+if cloud:
+    st.plotly_chart(
+        charts.peer_cloud_3d(
+            cloud=cloud,
+            subject_id=fpl.ANDERSON_FPL_ID,
+            subject_label="Anderson",
+            axis_labels=axis_labels,
+            peers_label=t("cloud_peers", lang),
+            middle_label=t("cloud_middle", lang),
+        ),
+        use_container_width=True,
+        config={"displayModeBar": False},
+    )
+else:
+    st.info(t("cloud_empty", lang))
 
 # Gemelo en tabla: en 3D se estima una posición, no se lee un valor.
 st.markdown(
