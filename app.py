@@ -108,6 +108,8 @@ except fpl.FplUnavailable as exc:
     st.stop()
 
 stats = fpl.headline_stats(element)
+season_row = fpl.past_season(summary)
+season_stats = fpl.headline_stats_for_season(season_row) if season_row else None
 sample = len(peer_group)
 profile_rows = fpl.percentile_profile(element, peer_group, fpl.TABLE_METRICS)
 by_key = {row["key"]: row for row in profile_rows}
@@ -246,26 +248,29 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-recoveries_90 = fpl.per_90(element, "recoveries")
-st.markdown(
-    ui.readouts(
-        [
-            ui.readout(thousands(stats["minutes"]), t("kpi_minutes", lang),
-                       t("kpi_minutes_sub", lang, starts=stats["starts"])),
-            ui.readout(str(stats["goal_involvements"]), t("kpi_ga", lang),
-                       t("kpi_ga_sub", lang, goals=stats["goals"], assists=stats["assists"])),
-            ui.readout(f"{stats['xgi']:.2f}", t("kpi_xgi", lang),
-                       t("kpi_xgi_sub", lang, xg=f"{stats['xg']:.2f}", xa=f"{stats['xa']:.2f}")),
-            ui.readout(str(stats["recoveries"]), t("kpi_recoveries", lang),
-                       t("kpi_recoveries_sub", lang, per90=f"{recoveries_90:.2f}"), subject=True),
-            ui.readout(str(stats["tackles"]), t("kpi_tackles", lang),
-                       t("kpi_tackles_sub", lang, cbi=stats["cbi"])),
-            ui.readout(str(stats["total_points"]), t("kpi_points", lang),
-                       t("kpi_points_sub", lang, ppg=f"{stats['points_per_game']:.1f}")),
-        ]
-    ),
-    unsafe_allow_html=True,
-)
+if season_stats:
+    recoveries_90 = fpl.per_90(season_row, "recoveries")
+    st.markdown(
+        ui.readouts(
+            [
+                ui.readout(thousands(season_stats["minutes"]), t("kpi_minutes", lang),
+                           t("kpi_minutes_sub", lang, starts=season_stats["starts"])),
+                ui.readout(str(season_stats["goal_involvements"]), t("kpi_ga", lang),
+                           t("kpi_ga_sub", lang, goals=season_stats["goals"], assists=season_stats["assists"])),
+                ui.readout(f"{season_stats['xgi']:.2f}", t("kpi_xgi", lang),
+                           t("kpi_xgi_sub", lang, xg=f"{season_stats['xg']:.2f}", xa=f"{season_stats['xa']:.2f}")),
+                ui.readout(str(season_stats["recoveries"]), t("kpi_recoveries", lang),
+                           t("kpi_recoveries_sub", lang, per90=f"{recoveries_90:.2f}"), subject=True),
+                ui.readout(str(season_stats["tackles"]), t("kpi_tackles", lang),
+                           t("kpi_tackles_sub", lang, cbi=season_stats["cbi"])),
+                ui.readout(str(season_stats["total_points"]), t("kpi_points", lang),
+                           t("kpi_points_sub", lang, bonus=season_stats["bonus"])),
+            ]
+        ),
+        unsafe_allow_html=True,
+    )
+else:
+    st.info(t("kpi_season_missing", lang, season=fpl.TARGET_SEASON))
 
 
 # ── FORMA 02 · La nube (pieza principal) ──
